@@ -198,13 +198,13 @@
       "mscorlib.dll": "sha256-pO\/W4w\/X+UjVMUMaxE5tYTQ0tILP+hmMu0zi0MSVBLc=",
       "netstandard.dll": "sha256-kj5cBXzwPYC+HD+P8+6VybY34JtEzjXjMIHXEI3hIiM=",
       "System.Private.CoreLib.dll": "sha256-Awk1lCiFfH7r9AAZfBtGqS8rhv6UJ5lUu3yF6HDH3tQ=",
-      "WebApiPovezivanje.dll": "sha256-FokhXQivXiJjllUunXZw7sPpBOudBu8dBN3htPC80z0="
+      "WebApiPovezivanje.dll": "sha256-mUlJ6sYom7jJ1d6ivhyhOwxrFLaRFCWY2G2cjqexXdU="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "WebApiPovezivanje.pdb": "sha256-kcWeV2ETV\/wZn3GW+ysNMPTNMLRlm4nW2\/t3Iy1aIYU="
+      "WebApiPovezivanje.pdb": "sha256-vV3jVpKEufB1wwj7SElwTxS\/bxvTN0kAhp27HKbaghs="
     },
     "runtime": {
       "dotnet.7.0.0.i4smme097n.js": "sha256-2jNLve8W0sST0LAebgAc1IwSnGhkbjOKO8QPWWiJssI=",
