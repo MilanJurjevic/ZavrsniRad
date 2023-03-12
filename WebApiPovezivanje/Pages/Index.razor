@@ -1,0 +1,98 @@
+﻿@page "/"
+
+@using WebApiPovezivanje.Models;
+@inject HttpClient httpClient;
+@inject NavigationManager navManager;
+
+<h3>Lista nerješenih zadataka</h3>
+<input type="text" @bind-value="search" placeholder="Upiši za pretragu" />
+<button @onclick="Lista">Dohvati sve</button>
+<button @onclick="Trazi">Potrazi</button>
+<ul>
+    @foreach (var item in osobe)
+    {
+        if(item.isDone==false)
+    {
+        
+        <li>
+                <div class="card">
+                    <h5 class="card-img-top">
+                        Zadatak:<br>
+                        <b> @item.todo </b>
+                    </h5>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Zaduženi Radnik:
+                                @item.radnikIme,  @item.radnikPrezime
+                        </h5>
+                        <p class="card-text"> @item.opisPosla</p>
+            <button @onclick="()=>Rijesavac(item, item.id)">Riješeno</button>
+
+               </div>
+            </div>
+        </li>
+    }
+    }
+
+</ul>
+
+@code {
+    public List<RadniZadatak> osobe = new List<RadniZadatak>();
+    public string search = "";
+    public RadniZadatak osoba = new RadniZadatak();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        osobe = await DohvatiListuAsync();
+    }
+    //sinhrono
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+
+
+    public async Task<List<RadniZadatak>> DohvatiListuAsync()
+    {
+        List<RadniZadatak> osobeSaServera = new List<RadniZadatak>();
+        var result = await httpClient.GetAsync("https://expertvjezbeapi.azurewebsites.net/api/ToDoSeminars");
+        if (result.IsSuccessStatusCode)
+        {
+            osobeSaServera = await result.Content.ReadFromJsonAsync<List<RadniZadatak>>();
+
+            osobeSaServera = osobeSaServera.Where(x => x.isDone == false).OrderBy(x => x.todo).ToList();
+        }
+        return osobeSaServera;
+    }
+    public async Task Lista()
+    {
+        osobe = await DohvatiListuAsync();
+    }
+    public async Task Trazi()
+    {
+        osobe = osobe.Where(x => x.radnikIme.ToLower().Contains(search.ToLower()) || x.radnikPrezime.ToLower().Contains(search)).ToList();
+    }
+
+    public async void Rijesavac(RadniZadatak item,int Id)
+    {
+        osoba = item;
+        osoba.isDone = true;
+
+        var result = await httpClient.PutAsJsonAsync($"https://expertvjezbeapi.azurewebsites.net/api/ToDoSeminars/{Id}", osoba);
+        if (result.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/");
+        }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+}

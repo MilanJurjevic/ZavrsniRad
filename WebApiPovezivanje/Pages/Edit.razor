@@ -1,0 +1,64 @@
+﻿@page "/edit/{id:int}"
+@using WebApiPovezivanje.Models
+@inject HttpClient httpClient;
+@inject NavigationManager navManager;
+<h3>Edit</h3>
+   <form @onsubmit="UrediOsobu">
+    <!--  <p>
+        
+        <label for="fime">Ime</label>
+        <input id="fime" @bind-value="osoba.Ime"  name="fime" type="text" placeholder="Upiši ime"  />
+    </p>
+    <p>
+        <label for="fprezime">Prezime</label>
+        <input id="fprezime" @bind-value="osoba.Prezime"  name="fprezime" type="text" placeholder="Prezime" />
+    </p>
+    <p>
+        <label for="fbrtel">Broj Telefona</label>
+        <input id="fbrtel" @bind-value="osoba.BrojTelefona"  name="fbrtel" type="text" placeholder="Broj telefona" />
+    </p>
+    <p>
+        <label for="fbrmob">Broj Mobitela</label>
+        <input id="fbrmob" @bind-value="osoba.BrojMobitela"  name="fbrmob" type="text" placeholder="Broj mobitela" />
+    </p>
+    <p>
+        <label for="fadr">Adresa</label>
+        <input id="fadr" @bind-value="osoba.Adresa"  name="fadr" type="text" placeholder="Adresa" />
+    </p>
+    <p>
+        <label for="fgrad">Grad</label>
+        <input id="fgrad" @bind-value="osoba.Grad"  name="fgrad" type="text" placeholder="Grad" />
+    </p>
+    <p>
+        <label for="fdrzava">Država</label>
+        <input id="fdrzava" @bind-value="osoba.Drzava" name="fdrzava"  type="text" placeholder="Drzava" />
+    </p>
+    <p>
+        <button type="submit">Spremi izmjenu</button>
+    </p>
+    -->
+</form>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public RadniZadatak osoba = new RadniZadatak();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await httpClient.GetAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            osoba = await result.Content.ReadFromJsonAsync<RadniZadatak>();
+        }
+    }
+    public async void UrediOsobu()
+    {
+
+        var result = await httpClient.PutAsJsonAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}", osoba);
+        if (result.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("osobe");
+        }
+    }
+}

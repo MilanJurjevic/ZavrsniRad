@@ -1,0 +1,63 @@
+﻿@page "/delete/{id:int}"
+@inject NavigationManager navManager;
+@using WebApiPovezivanje.Models
+@inject HttpClient httpClient;
+<h3>Delete</h3>
+Proslijeđeni Id= @Id
+
+@if (IsError == true)
+{
+    <p>Uppps! došlo je do greške. 
+        Kontaktirajte administratora.</p>
+}
+<p>
+    Id @osoba.id
+</p>
+<p>
+    Ime osobe: @osoba.radnikIme
+</p>
+<p>
+   Prezime osobe: @osoba.radnikPrezime
+</p>
+<p>
+    Grad osobe: @osoba.todo
+</p>
+
+<button @onclick="Nazad">Nazad</button>
+
+<button @onclick="Obrisi">Obriši osobu</button>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public RadniZadatak osoba = new RadniZadatak();
+    public bool IsError = false;
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await httpClient.GetAsync($"https://expertvjezbeapi.azurewebsites.net/api/ToDoSeminars/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            osoba = await result.Content.ReadFromJsonAsync<RadniZadatak>();
+        }
+    }
+
+    public void Nazad()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    public async Task Obrisi()
+    {
+        var retval= await httpClient.
+        DeleteAsync($"https://expertvjezbeapi.azurewebsites.net/api/ToDoSeminars/{Id}");
+        if (retval.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/");
+        }
+        else
+        {
+            IsError = true;
+        }
+
+    }
+
+}

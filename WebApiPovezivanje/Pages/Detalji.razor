@@ -1,0 +1,38 @@
+﻿@page "/detalji/{id:int}"
+@inject NavigationManager navManager;
+@using WebApiPovezivanje.Models
+@inject HttpClient httpClient;
+<h3>Detalji</h3>
+Proslijeđeni Id= @Id
+<!--
+<p>
+    Ime osobe: @osoba.Ime
+</p>
+<p>
+   Prezime osobe: @osoba.Prezime
+</p>
+<p>
+    Grad osobe: @osoba.Grad
+</p>
+-->
+
+<button @onclick="Nazad">Nazad</button>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public RadniZadatak osoba = new RadniZadatak();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await httpClient.GetAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            osoba = await result.Content.ReadFromJsonAsync<RadniZadatak>();
+        }
+    }
+
+    public void Nazad()
+    {
+        navManager.NavigateTo("/osobe");
+    }
+}
